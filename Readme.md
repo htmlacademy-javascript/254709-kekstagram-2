@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Владислав Кенжибаев](https://up.htmlacademy.ru/javascript-individual/2/user/254709).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Беллавин](https://htmlacademy.ru/profile/bellavin).
 
 ---
 
