@@ -1,13 +1,7 @@
 const checkStringLength = (str, length) => str.length <= length;
-console.log('Проверка длины строки');
-console.log(checkStringLength('проверяемая строка', 20));
-console.log(checkStringLength('проверяемая строка', 18));
-console.log(checkStringLength('проверяемая строка', 10));
-console.log(checkStringLength('проверяемая строка', 5));
-console.log(checkStringLength('проверяемая строка', 0));
 
 function checkPalindrome(str) {
-  let normalizeStr = str.replaceAll(' ', '').toLowerCase();
+  const normalizeStr = str.replaceAll(' ', '').toLowerCase();
   let emptyStr = '';
   for (let i = normalizeStr.length - 1; i >= 0; i--) {
     emptyStr += normalizeStr[i];
@@ -37,7 +31,7 @@ function extractNumber (str) {
   str = String(str);
   let extractedStr = '';
   for (let i = 0; i <= str.length - 1; i++) {
-    let symbol = parseInt(str[i]);
+    const symbol = parseInt(str[i]);
     if (!Number.isNaN(symbol)) {
       extractedStr += symbol;
     }
