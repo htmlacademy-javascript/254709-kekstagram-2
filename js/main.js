@@ -116,6 +116,15 @@ const getRandomUniqueInt = (min, max) => {
 // Функция выбора случайного элемента массива
 const getRandomArrElement = (array) => array[getRandomInt(0, array.length - 1)];
 
+// Функция получения ID фото
+const getPhotoId = getRandomUniqueInt(IdPhotoRange.MIN, IdPhotoRange.MAX);
+
+// Функция получения Url фото
+const getRandomUrl = getRandomUniqueInt(UrlRange.MIN, UrlRange.MAX);
+
+// Функция получения ID комментария
+const getMessageId = getRandomUniqueInt(IdMessageRange.MIN, IdMessageRange.MAX);
+
 // Функция создания комментария
 const createComment = () => {
   const messagesQty = [];
@@ -123,7 +132,7 @@ const createComment = () => {
     messagesQty.push(getRandomArrElement(MESSAGE));
   }
   return {
-    id: getRandomUniqueInt(IdMessageRange.MIN, IdMessageRange.MAX)(),
+    id: getMessageId(),
     avatar: `img/avatar-${getRandomInt(AvatarRange.MIN, AvatarRange.MAX)}.svg`,
     message: messagesQty.join(' '),
     name: getRandomArrElement(AUTHOR_NAME)
@@ -134,8 +143,8 @@ const createComment = () => {
 const generateObj = () => {
     const comments = Array.from({length: getRandomInt(CommentsRange.MIN, CommentsRange.MAX)}, createComment);
     return {
-      id: getRandomUniqueInt(IdPhotoRange.MIN, IdPhotoRange.MAX)(),
-      url: `photos/${getRandomUniqueInt(UrlRange.MIN, UrlRange.MAX)()}.jpg`,
+      id: getPhotoId(),
+      url: `photos/${getRandomUrl()}.jpg`,
       description: getRandomArrElement(DESCRIPTION),
       likes: getRandomInt(LikesRange.MIN, LikesRange.MAX),
       comments
