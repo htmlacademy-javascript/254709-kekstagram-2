@@ -116,44 +116,17 @@ const getRandomUniqueInt = (min, max) => {
 // Функция выбора случайного элемента массива
 const getRandomArrElement = (array) => array[getRandomInt(0, array.length - 1)];
 
-// Функция получения ID фото
-const getPhotoId = () => getRandomUniqueInt(IdPhotoRange.MIN, IdPhotoRange.MAX)();
-
-// Функция получения Url фото
-const getRandomUrl = () => `photos/${getRandomUniqueInt(UrlRange.MIN, UrlRange.MAX)()}.jpg`;
-
-// Функция выбора описания фотографии
-const getRandomDescription = () => getRandomArrElement(DESCRIPTION);
-
-// Функция получения числа лайков
-const getRandomLikes = () => getRandomInt(LikesRange.MIN, LikesRange.MAX);
-
-// Функция получения ID комментария
-const getMessageId = () => getRandomUniqueInt(IdMessageRange.MIN, IdMessageRange.MAX)();
-
-// Функция получения аватара
-const getRandomAvatar = () => `img/avatar-${getRandomInt(AvatarRange.MIN, AvatarRange.MAX)}.svg`;
-
-// Функция получения количества строк комментария
-const getRandomStrQty = () => getRandomInt(MessageRange.MIN, MessageRange.MAX);
-
-// Функция выбора сообщения
-const getRandomMessage = () => getRandomArrElement(MESSAGE);
-
-// Функция выбора автора
-const getRandomAuthor = () => getRandomArrElement(AUTHOR_NAME);
-
 // Функция создания комментария
 const createComment = () => {
   const messagesQty = [];
-  while (messagesQty.length < getRandomStrQty()) {
+  while (messagesQty.length < getRandomInt(MessageRange.MIN, MessageRange.MAX)) {
     messagesQty.push(getRandomArrElement(MESSAGE));
   }
   return {
-    id: getMessageId(),
-    avatar: getRandomAvatar(),
+    id: getRandomUniqueInt(IdMessageRange.MIN, IdMessageRange.MAX)(),
+    avatar: `img/avatar-${getRandomInt(AvatarRange.MIN, AvatarRange.MAX)}.svg`,
     message: messagesQty.join(' '),
-    name: getRandomAuthor()
+    name: getRandomArrElement(AUTHOR_NAME)
   };
 };
 
@@ -161,14 +134,16 @@ const createComment = () => {
 const generateObj = () => {
     const comments = Array.from({length: getRandomInt(CommentsRange.MIN, CommentsRange.MAX)}, createComment);
     return {
-      id: getPhotoId(),
-      url: getRandomUrl(),
-      description: getRandomDescription(),
-      likes: getRandomLikes(),
+      id: getRandomUniqueInt(IdPhotoRange.MIN, IdPhotoRange.MAX)(),
+      url: `photos/${getRandomUniqueInt(UrlRange.MIN, UrlRange.MAX)()}.jpg`,
+      description: getRandomArrElement(DESCRIPTION),
+      likes: getRandomInt(LikesRange.MIN, LikesRange.MAX),
       comments
     }
   };
 
-  // готовый массив сгенерированных объектов
+  // Готовый массив сгенерированных объектов
   const completeArr = Array.from({length: OBJECT_QTY}, generateObj);
+
+  // Проверка с выводов в таблицу (удалить перед сдачей)
   console.table(completeArr);
