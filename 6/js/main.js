@@ -105,9 +105,9 @@ const getRandomUniqueInt = (min, max) => {
     if (unAvailableInt.length >= (max - min + 1)) {
       return null
     }
-    do {
+    while (unAvailableInt.includes(currentInt)) {
       currentInt = getRandomInt(min, max)
-    } while (unAvailableInt.includes(currentInt));
+    };
     unAvailableInt.push(currentInt);
     return currentInt
   }
