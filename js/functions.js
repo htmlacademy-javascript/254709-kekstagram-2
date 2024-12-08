@@ -1,5 +1,5 @@
 const getHours = (timeString) => Number(timeString.split(':')[0]);
-const getMinutes = (timeString) => Number(timeString.split(':')[0]);
+const getMinutes = (timeString) => Number(timeString.split(':')[1]);
 
 const isWithinWorkingHours = (workdayStart, workdayEnd, meetingStart, meetingLength) => {
 
