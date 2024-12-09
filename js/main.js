@@ -1,6 +1,5 @@
 import {
-  generateArrObj
-} from './data.js';
+  renderGallery
+} from './thumbnails.js';
 
-// Проверка вывода и работы. Удалить перед сдачей.
-console.table(generateArrObj());
+renderGallery();
