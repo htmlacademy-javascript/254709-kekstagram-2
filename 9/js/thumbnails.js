@@ -1,14 +1,9 @@
-import {
-  generateArrObj
-} from './data.js';
-
-const renderGallery = () => {
+const renderGallery = (userPictures) => {
 const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('a');
 
-const userPictures = generateArrObj();
 const pictureFragment = document.createDocumentFragment();
 
 userPictures.forEach(({id, url, description, likes, comments}) => {
