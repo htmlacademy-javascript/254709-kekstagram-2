@@ -1,7 +1,7 @@
 const isWithinWorkingHours = (workdayStart, workdayEnd, meetingStart, meetingLength) => {
   const convertToMinutes = (timeString) => {
-      const [hours, minutes] = timeString.split(':').map(Number);
-      return hours * 60 + minutes;
+      const [hours, minutes] = timeString.split(':');
+      return (Number(hours) * 60) + Number(minutes)
   };
   const workdayStartMinutes = convertToMinutes(workdayStart);
   const workdayEndMinutes = convertToMinutes(workdayEnd);
