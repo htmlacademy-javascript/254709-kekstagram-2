@@ -1,9 +1,9 @@
 import { generateArrObj } from './data.js';
 import { renderGallery } from './thumbnails.js';
-import { renderBigPicture } from './photo-modal.js';
+import { setupPictureEventListeners } from './photo-modal.js';
 
-const photoArray = generateArrObj();
-renderGallery(photoArray);
-renderBigPicture(photoArray);
+const photoCollection = generateArrObj();
+renderGallery(photoCollection);
+setupPictureEventListeners (photoCollection);
 
 

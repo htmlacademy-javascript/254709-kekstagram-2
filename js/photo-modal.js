@@ -15,33 +15,27 @@ const commentsContainer = bigPictureContainer.querySelector('.social__comments')
 const commentElement = document.querySelector('.social__comment');
 
 // Загружаем массив фоток, вешаем обработчик событий, находим фото, по которому кликнули
-const renderBigPicture = (picturesArr) => {
+const setupPictureEventListeners = (photoCollection) => {
   picturesContainer.addEventListener('click', (evt) => {
     const currentEventPictureId = evt.target.closest('.picture').dataset.pictureId;
     if (currentEventPictureId) {
-      const foundedPhoto = picturesArr.find((picture) => picture.id === Number(currentEventPictureId));
-      openBigPicture(foundedPhoto);
+      const foundedPhoto = photoCollection.find((picture) => picture.id === Number(currentEventPictureId));
+      renderBigPicture(foundedPhoto);
     };
   });
 };
 
 // Открываем окно с большой картинкой-сначала прогружаем фото, данные и комментарии, потом показываем пользователю результат
-const openBigPicture = (picture) => {
-  bigPictureImg.src = picture.url;
-  bigPictureLikes.textContent = picture.likes;
-  commentsQty.textContent = picture.comments.length;
-  bigPictureDescription.textContent = picture.description;
-  renderComments(picture.comments);
+const renderBigPicture = ({ url, likes, comments, description }) => {
+  bigPictureImg.src = url;
+  bigPictureLikes.textContent = likes;
+  commentsQty.textContent = comments.length;
+  bigPictureDescription.textContent = description;
 
-  bigPictureCloseElement.addEventListener('click', onClosePictureElement);
-  document.addEventListener('keydown', onDocumentKeydown);
-
-  bigPictureContainer.classList.remove('hidden');
-  socialCommentCount.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
-  bodyContainer.classList.add('modal-open');
+  renderComments(comments);
+  attachBigPictureListeners();
+  toggleVisibility(true);
 };
-
 
 // Функция подгрузки комментов в окно большой картинки
 const renderComments = (comments) => {
@@ -59,6 +53,20 @@ const renderComments = (comments) => {
   commentsContainer.append(commentsFragment);
 };
 
+// Функция добавления обработчиков события
+const attachBigPictureListeners = () => {
+  bigPictureCloseElement.addEventListener('click', onClosePictureElement);
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+// Функция переключения видимости
+const toggleVisibility = (isOpen) => {
+  bigPictureContainer.classList.toggle('hidden', !isOpen);
+  socialCommentCount.classList.toggle('hidden', isOpen);
+  commentsLoader.classList.toggle('hidden', isOpen);
+  bodyContainer.classList.toggle('modal-open', isOpen);
+}
+
 // Функция закрытия большой картинки нажатием на кнопку Escape
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -74,13 +82,9 @@ const onClosePictureElement = () => {
 
 // Функция непосредственно отвечающая за закрытие большой картинки и удаление обработчиков событий на закрытие
 const closeBigPicture = () => {
-  bigPictureContainer.classList.add('hidden');
-  socialCommentCount.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
-  bodyContainer.classList.remove('modal-open');
-
   bigPictureCloseElement.removeEventListener('click', onClosePictureElement);
   document.removeEventListener('keydown', onDocumentKeydown);
+  toggleVisibility(false);
 };
 
-export { renderBigPicture };
+export { setupPictureEventListeners };
