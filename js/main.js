@@ -1,9 +1,9 @@
-import {
-  generateArrObj
-} from './data.js';
+import { generateArrObj } from './data.js';
+import { renderGallery } from './thumbnails.js';
+import { renderBigPicture } from './photo-modal.js';
 
-import {
-  renderGallery
-} from './thumbnails.js';
+const photoArray = generateArrObj();
+renderGallery(photoArray);
+renderBigPicture(photoArray);
 
-renderGallery(generateArrObj());
+
