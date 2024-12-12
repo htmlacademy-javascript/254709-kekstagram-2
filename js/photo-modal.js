@@ -80,6 +80,7 @@ const updateCommentsLoaderVisibility = () => {
   commentsLoader.classList.toggle('hidden', displayedCommentsCount >= currentComments.length);
 };
 
+// Функция добавления обработчика событий на контейнер с картинками и вычисление ID картинки, по которой был клик
 const setupPictureEventListeners = (photoCollection) => {
   picturesContainer.addEventListener('click', (evt) => {
     const currentEventPictureId = evt.target.closest('.picture').dataset.pictureId;
@@ -90,11 +91,13 @@ const setupPictureEventListeners = (photoCollection) => {
   });
 };
 
+// Функция переключения видимости контейнера с картинкой и прокрутки
 const toggleVisibility = (isOpen) => {
   bigPictureContainer.classList.toggle('hidden', !isOpen);
   bodyContainer.classList.toggle('modal-open', isOpen);
 };
 
+// Вызов закрытия картинки нажатием на эскейп
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -102,10 +105,13 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
+// Вызов закрытия картинки нажатием на закрывающий элемент
 const onClosePictureElement = () => {
   closeBigPicture();
 };
 
+
+// Функция закрытия большой картинки, переключение видимостей, снятие обработчиков событий
 const closeBigPicture = () => {
   commentsLoader.removeEventListener('click', renderComments);
   bigPictureCloseElement.removeEventListener('click', onClosePictureElement);
