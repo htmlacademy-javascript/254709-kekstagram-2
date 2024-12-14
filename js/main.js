@@ -4,6 +4,6 @@ import { setupPictureEventListeners } from './photo-modal.js';
 
 const photoCollection = generateArrObj();
 renderGallery(photoCollection);
-setupPictureEventListeners (photoCollection);
+setupPictureEventListeners(photoCollection);
 
 
