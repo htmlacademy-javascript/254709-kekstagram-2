@@ -9,12 +9,12 @@ const picturesContainerElement = document.querySelector('.pictures');
 
 // Элементы большой картинки
 const bigPictureContainerElement = document.querySelector('.big-picture');
+const bigPictureOverlayElement = document.querySelector('.overlay');
 const bigPictureCloseButtonElement = bigPictureContainerElement.querySelector('.big-picture__cancel');
 const bigPictureImageElement = bigPictureContainerElement.querySelector('.big-picture__img img');
 const bigPictureSocialElement = bigPictureContainerElement.querySelector('.big-picture__social');
 const bigPictureLikesElement = bigPictureSocialElement.querySelector('.likes-count');
 const bigPictureDescriptionElement = bigPictureSocialElement.querySelector('.social__caption');
-
 
 // Рендер большой картинки
 const renderBigPicture = ({ url, likes, comments, description }) => {
@@ -22,11 +22,24 @@ const renderBigPicture = ({ url, likes, comments, description }) => {
   bigPictureLikesElement.textContent = likes;
   bigPictureDescriptionElement.textContent = description;
   bigPictureCloseButtonElement.addEventListener('click', onClickCloseButton);
+  bigPictureOverlayElement.addEventListener('click', onOverlayClick);
   document.addEventListener('keydown', onKeydownDocument);
   initComments(comments); // Инициализируем комментарии
   bigPictureContainerElement.classList.remove('hidden'); // включаем видимость контейнера большой картинки
   bodyContainerElement.classList.add('modal-open'); // блокируем прокрутку body
 };
+
+// Вызов закрытия картинки нажатием на закрывающий элемент
+function onClickCloseButton () {
+  closeBigPicture();
+}
+
+// Вызов закрытия картинки нажатием мимо модального окна
+function onOverlayClick(evt) {
+  if (evt.target === bigPictureOverlayElement) {
+    closeBigPicture();
+  }
+}
 
 // Вызов закрытия картинки нажатием на escape
 function onKeydownDocument (evt) {
@@ -36,14 +49,9 @@ function onKeydownDocument (evt) {
   }
 }
 
-// Вызов закрытия картинки нажатием на закрывающий элемент
-function onClickCloseButton () {
-  closeBigPicture();
-}
-
-// Функция закрытия большой картинки, снятие обработчиков событий
 function closeBigPicture () {
   bigPictureCloseButtonElement.removeEventListener('click', onClickCloseButton);
+  bigPictureContainerElement.removeEventListener('click', onOverlayClick);
   document.removeEventListener('keydown', onKeydownDocument);
   bigPictureContainerElement.classList.add('hidden');
   bodyContainerElement.classList.remove('modal-open');
