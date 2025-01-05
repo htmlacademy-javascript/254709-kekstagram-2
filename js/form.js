@@ -1,5 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { runValidator, stopValidator } from './validator.js';
+import { runImageEditor } from './image-editor.js';
 
 const imgUploadElement = document.querySelector('.img-upload__input');
 const imgEditElement = document.querySelector('.img-upload__overlay');
@@ -11,6 +12,7 @@ const newHashTagsElement = document.querySelector('.text__hashtags');
 const setupFormEventListeners = () => {
   imgUploadElement.addEventListener('change', () => {
     runValidator();
+    runImageEditor();
     imgEditElement.classList.remove('hidden');
     bodyContainerElement.classList.add('modal-open');
     imgEditCloseButtonElement.addEventListener('click', onClickCloseButton);
