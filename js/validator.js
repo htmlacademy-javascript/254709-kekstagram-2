@@ -4,12 +4,12 @@ const MAX_LENGTH = 140;
 const MAX_QTY = 5;
 
 
-const imgEditForm = document.querySelector('.img-upload__form');
-const newCommentElement = document.querySelector('.text__description');
-const newHashTagsElement = document.querySelector('.text__hashtags');
-const submitButtonElement = document.querySelector('.img-upload__submit');
+const imgEditFormElement = document.querySelector('.img-upload__form');
+const newCommentElement = imgEditFormElement.querySelector('.text__description');
+const newHashTagsElement = imgEditFormElement.querySelector('.text__hashtags');
+const submitButtonElement = imgEditFormElement.querySelector('.img-upload__submit');
 
-const pristine = new Pristine(imgEditForm, {
+const pristine = new Pristine(imgEditFormElement, {
   classTo: 'img-upload__field-wrapper',
   errorClass: 'img-upload__field-wrapper--error',
   errorTextParent: 'img-upload__field-wrapper',
