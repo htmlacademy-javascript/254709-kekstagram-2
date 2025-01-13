@@ -8,36 +8,36 @@ const body = document.body;
 const picturesContainerElement = document.querySelector('.pictures');
 
 // Элементы большой картинки
-const ContainerElement = document.querySelector('.big-picture');
-const OverlayElement = document.querySelector('.overlay');
-const CloseButtonElement = ContainerElement.querySelector('.big-picture__cancel');
-const ImageElement = ContainerElement.querySelector('.big-picture__img img');
-const SocialElement = ContainerElement.querySelector('.big-picture__social');
-const LikesElement = SocialElement.querySelector('.likes-count');
-const DescriptionElement = SocialElement.querySelector('.social__caption');
+const containerElement = document.querySelector('.big-picture');
+const overlayElement = document.querySelector('.overlay');
+const closeButtonElement = containerElement.querySelector('.big-picture__cancel');
+const imageElement = containerElement.querySelector('.big-picture__img img');
+const socialElement = containerElement.querySelector('.big-picture__social');
+const likesElement = socialElement.querySelector('.likes-count');
+const descriptionElement = socialElement.querySelector('.social__caption');
 
 // Рендер большой картинки
-const render = ({ url, likes, comments, description }) => {
-  ImageElement.src = url;
-  LikesElement.textContent = likes;
-  DescriptionElement.textContent = description;
-  CloseButtonElement.addEventListener('click', onClickCloseButton);
-  OverlayElement.addEventListener('click', onOverlayClick);
+const renderBigPicture = ({ url, likes, comments, description }) => {
+  imageElement.src = url;
+  likesElement.textContent = likes;
+  descriptionElement.textContent = description;
+  closeButtonElement.addEventListener('click', onClickCloseButton);
+  overlayElement.addEventListener('click', onOverlayClick);
   document.addEventListener('keydown', onKeydownDocument);
   initComments(comments); // Инициализируем комментарии
-  ContainerElement.classList.remove('hidden'); // включаем видимость контейнера большой картинки
+  containerElement.classList.remove('hidden'); // включаем видимость контейнера большой картинки
   body.classList.add('modal-open'); // блокируем прокрутку body
 };
 
 // Вызов закрытия картинки нажатием на закрывающий элемент
 function onClickCloseButton () {
-  close();
+  closeBigPicture();
 }
 
 // Вызов закрытия картинки нажатием мимо модального окна
 function onOverlayClick(evt) {
-  if (evt.target === OverlayElement) {
-    close();
+  if (evt.target === overlayElement) {
+    closeBigPicture();
   }
 }
 
@@ -45,15 +45,15 @@ function onOverlayClick(evt) {
 function onKeydownDocument (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    close();
+    closeBigPicture();
   }
 }
 
-function close () {
-  CloseButtonElement.removeEventListener('click', onClickCloseButton);
-  ContainerElement.removeEventListener('click', onOverlayClick);
+function closeBigPicture () {
+  closeButtonElement.removeEventListener('click', onClickCloseButton);
+  containerElement.removeEventListener('click', onOverlayClick);
   document.removeEventListener('keydown', onKeydownDocument);
-  ContainerElement.classList.add('hidden');
+  containerElement.classList.add('hidden');
   body.classList.remove('modal-open');
 }
 
@@ -67,7 +67,7 @@ const setupPictureEventListeners = (photoCollection) => {
     const id = target.dataset.pictureId; // поиск по установленному атрибуту data-set-id
     if (id) {
       const foundedPhoto = photoCollection.find((picture) => picture.id === Number(id));
-      render(foundedPhoto);
+      renderBigPicture(foundedPhoto);
     }
   });
 };
