@@ -1,4 +1,4 @@
-import { isEscapeKey } from './util.js';
+import { isEscapeKey, showSendErrorAlert, showSendSuccessAlert } from './util.js';
 import { runValidator, stopValidator } from './validator.js';
 import { runImageEditor } from './image-editor.js';
 import { sendData } from './api.js';
@@ -50,28 +50,38 @@ function closeImgEdit() {
   imgEditElement.classList.add('hidden');
   body.classList.remove('modal-open');
   imgUploadElement.value = '';
-  newCommentElement.value = '';
-  newHashTagsElement.value = '';
   stopValidator();
+  resetSettings();
 }
 
-const blockSubmitButton = () => {
-  submitButtonElement.disabled = true;
-};
+function resetSettings() {
+  imgUploadElement.value = '';
+  newCommentElement.value = '';
+  newHashTagsElement.value = '';
+}
 
-const unblockSubmitButton = () => {
+function blockSubmitButton() {
+  submitButtonElement.disabled = true;
+}
+
+function unblockSubmitButton () {
   submitButtonElement.disabled = false;
-};
+}
 
 // Обработчик событий на кнопку отправить
 function setUserFormSubmit(evt) {
   evt.preventDefault();
   blockSubmitButton();
   sendData(new FormData(evt.target))
-    .then(closeImgEdit())
+    .then(() => {
+      closeImgEdit();
+      resetSettings();
+      showSendSuccessAlert();
+    }
+    )
     .catch(
-      (err) => {
-        alert(err.message);
+      () => {
+        showSendErrorAlert();
       }
     )
     .finally(unblockSubmitButton);
