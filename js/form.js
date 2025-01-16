@@ -1,13 +1,16 @@
 import { isEscapeKey } from './util.js';
 import { runValidator, stopValidator } from './validator.js';
 import { runImageEditor } from './image-editor.js';
+import { sendData } from './api.js';
 
-const imgUploadElement = document.querySelector('.img-upload__input');
-const imgEditElement = document.querySelector('.img-upload__overlay');
-const imgEditCloseButtonElement = document.querySelector('.img-upload__cancel');
+const formElement = document.querySelector('.img-upload__form');
+const submitButtonElement = formElement.querySelector('.img-upload__submit');
+const imgUploadElement = formElement.querySelector('.img-upload__input');
+const imgEditElement = formElement.querySelector('.img-upload__overlay');
+const imgEditCloseButtonElement = formElement.querySelector('.img-upload__cancel');
 const body = document.body;
-const newCommentElement = document.querySelector('.text__description');
-const newHashTagsElement = document.querySelector('.text__hashtags');
+const newCommentElement = formElement.querySelector('.text__description');
+const newHashTagsElement = formElement.querySelector('.text__hashtags');
 
 const setupFormEventListeners = () => {
   imgUploadElement.addEventListener('change', () => {
@@ -15,6 +18,7 @@ const setupFormEventListeners = () => {
     runImageEditor();
     imgEditElement.classList.remove('hidden');
     body.classList.add('modal-open');
+    formElement.addEventListener('submit', setUserFormSubmit);
     imgEditCloseButtonElement.addEventListener('click', onClickCloseButton);
     imgEditElement.addEventListener('click', onOverlayClick);
     document.addEventListener('keydown', onKeydownDocument);
@@ -46,7 +50,31 @@ function closeImgEdit() {
   imgEditElement.classList.add('hidden');
   body.classList.remove('modal-open');
   imgUploadElement.value = '';
+  newCommentElement.value = '';
+  newHashTagsElement.value = '';
   stopValidator();
+}
+
+const blockSubmitButton = () => {
+  submitButtonElement.disabled = true;
+};
+
+const unblockSubmitButton = () => {
+  submitButtonElement.disabled = false;
+};
+
+// Обработчик событий на кнопку отправить
+function setUserFormSubmit(evt) {
+  evt.preventDefault();
+  blockSubmitButton();
+  sendData(new FormData(evt.target))
+    .then(closeImgEdit())
+    .catch(
+      (err) => {
+        alert(err.message);
+      }
+    )
+    .finally(unblockSubmitButton);
 }
 
 export { setupFormEventListeners };
