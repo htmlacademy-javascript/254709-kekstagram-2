@@ -1,5 +1,4 @@
 import '../vendor/nouislider/nouislider.js';
-import '../vendor/nouislider/nouislider.css';
 
 const buttonDecrementElement = document.querySelector('.scale__control--smaller');
 const buttonIncrementElement = document.querySelector('.scale__control--bigger');
