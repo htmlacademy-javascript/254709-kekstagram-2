@@ -7,4 +7,3 @@ const photoCollection = generateArrObj();
 renderGallery(photoCollection);
 setupPictureEventListeners(photoCollection);
 setupFormEventListeners();
-

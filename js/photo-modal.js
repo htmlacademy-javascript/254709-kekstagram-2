@@ -60,11 +60,7 @@ function closeBigPicture () {
 // Функция добавления обработчика событий на контейнер с картинками и вычисление ID картинки, по которой был клик
 const setupPictureEventListeners = (photoCollection) => {
   picturesContainerElement.addEventListener('click', (evt) => {
-    const target = evt.target.closest('.picture');
-    if (!target) {
-      return;
-    }
-    const id = target.dataset.pictureId; // поиск по установленному атрибуту data-set-id
+    const id = evt.target.closest('.picture').dataset.pictureId; // поиск по установленному атрибуту data-set-id
     if (id) {
       const foundedPhoto = photoCollection.find((picture) => picture.id === Number(id));
       renderBigPicture(foundedPhoto);

@@ -5,7 +5,7 @@ import { runImageEditor } from './image-editor.js';
 const imgUploadElement = document.querySelector('.img-upload__input');
 const imgEditElement = document.querySelector('.img-upload__overlay');
 const imgEditCloseButtonElement = document.querySelector('.img-upload__cancel');
-const bodyContainerElement = document.body;
+const body = document.body;
 const newCommentElement = document.querySelector('.text__description');
 const newHashTagsElement = document.querySelector('.text__hashtags');
 
@@ -14,7 +14,7 @@ const setupFormEventListeners = () => {
     runValidator();
     runImageEditor();
     imgEditElement.classList.remove('hidden');
-    bodyContainerElement.classList.add('modal-open');
+    body.classList.add('modal-open');
     imgEditCloseButtonElement.addEventListener('click', onClickCloseButton);
     imgEditElement.addEventListener('click', onOverlayClick);
     document.addEventListener('keydown', onKeydownDocument);
@@ -44,7 +44,7 @@ function onKeydownDocument(evt) {
 // Закрытие редактирования изображения
 function closeImgEdit() {
   imgEditElement.classList.add('hidden');
-  bodyContainerElement.classList.remove('modal-open');
+  body.classList.remove('modal-open');
   imgUploadElement.value = '';
   stopValidator();
 }
