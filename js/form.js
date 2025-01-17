@@ -1,20 +1,23 @@
-import { isEscapeKey } from './util.js';
+import { isEscapeKey, showSendErrorAlert, showSendSuccessAlert } from './util.js';
 import { runValidator, stopValidator } from './validator.js';
 import { runImageEditor } from './image-editor.js';
+import { sendData } from './api.js';
 
-const imgUploadElement = document.querySelector('.img-upload__input');
-const imgEditElement = document.querySelector('.img-upload__overlay');
-const imgEditCloseButtonElement = document.querySelector('.img-upload__cancel');
-const bodyContainerElement = document.body;
-const newCommentElement = document.querySelector('.text__description');
-const newHashTagsElement = document.querySelector('.text__hashtags');
+const formElement = document.querySelector('.img-upload__form');
+const submitButtonElement = formElement.querySelector('.img-upload__submit');
+const imgUploadElement = formElement.querySelector('.img-upload__input');
+const imgEditElement = formElement.querySelector('.img-upload__overlay');
+const imgEditCloseButtonElement = formElement.querySelector('.img-upload__cancel');
+const newCommentElement = formElement.querySelector('.text__description');
+const newHashTagsElement = formElement.querySelector('.text__hashtags');
 
 const setupFormEventListeners = () => {
   imgUploadElement.addEventListener('change', () => {
     runValidator();
     runImageEditor();
     imgEditElement.classList.remove('hidden');
-    bodyContainerElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+    formElement.addEventListener('submit', setUserFormSubmit);
     imgEditCloseButtonElement.addEventListener('click', onClickCloseButton);
     imgEditElement.addEventListener('click', onOverlayClick);
     document.addEventListener('keydown', onKeydownDocument);
@@ -44,9 +47,39 @@ function onKeydownDocument(evt) {
 // Закрытие редактирования изображения
 function closeImgEdit() {
   imgEditElement.classList.add('hidden');
-  bodyContainerElement.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
   imgUploadElement.value = '';
   stopValidator();
+  resetSettings();
 }
+
+function resetSettings() {
+  imgUploadElement.value = '';
+  newCommentElement.value = '';
+  newHashTagsElement.value = '';
+}
+
+// Обработчик событий на кнопку отправить
+function setUserFormSubmit(evt) {
+  evt.preventDefault();
+  submitButtonElement.setAttribute('disabled', '');
+  sendData(new FormData(evt.target))
+    .then(() => {
+      closeImgEdit();
+      resetSettings();
+      showSendSuccessAlert();
+    }
+    )
+    .catch(
+      () => {
+        showSendErrorAlert();
+      }
+    )
+    .finally(
+      () => {
+        submitButtonElement.removeAttribute('disabled');
+      });
+}
+
 
 export { setupFormEventListeners };

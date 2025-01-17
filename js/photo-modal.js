@@ -1,9 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { initComments } from './comments-loader.js';
 
-// Общий контейнер
-const body = document.body;
-
 // Контейнер с картинками
 const picturesContainerElement = document.querySelector('.pictures');
 
@@ -26,7 +23,7 @@ const renderBigPicture = ({ url, likes, comments, description }) => {
   document.addEventListener('keydown', onKeydownDocument);
   initComments(comments); // Инициализируем комментарии
   containerElement.classList.remove('hidden'); // включаем видимость контейнера большой картинки
-  body.classList.add('modal-open'); // блокируем прокрутку body
+  document.body.classList.add('modal-open'); // блокируем прокрутку body
 };
 
 // Вызов закрытия картинки нажатием на закрывающий элемент
@@ -54,17 +51,13 @@ function closeBigPicture () {
   containerElement.removeEventListener('click', onOverlayClick);
   document.removeEventListener('keydown', onKeydownDocument);
   containerElement.classList.add('hidden');
-  body.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
 }
 
 // Функция добавления обработчика событий на контейнер с картинками и вычисление ID картинки, по которой был клик
 const setupPictureEventListeners = (photoCollection) => {
   picturesContainerElement.addEventListener('click', (evt) => {
-    const target = evt.target.closest('.picture');
-    if (!target) {
-      return;
-    }
-    const id = target.dataset.pictureId; // поиск по установленному атрибуту data-set-id
+    const id = evt.target.closest('.picture').dataset.pictureId; // поиск по установленному атрибуту data-set-id
     if (id) {
       const foundedPhoto = photoCollection.find((picture) => picture.id === Number(id));
       renderBigPicture(foundedPhoto);

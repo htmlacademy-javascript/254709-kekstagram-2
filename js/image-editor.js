@@ -1,5 +1,4 @@
 import '../vendor/nouislider/nouislider.js';
-import '../vendor/nouislider/nouislider.css';
 
 const buttonDecrementElement = document.querySelector('.scale__control--smaller');
 const buttonIncrementElement = document.querySelector('.scale__control--bigger');
@@ -8,7 +7,7 @@ const scaleValueElement = document.querySelector('.scale__control--value');
 const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 const sliderElement = sliderContainerElement.querySelector('.effect-level__slider');
 const effectLevelElement = sliderContainerElement.querySelector('.effect-level__value');
-const ImageElement = document.querySelector('.img-upload__preview');
+const imageElement = document.querySelector('.img-upload__preview');
 const effectListElement = document.querySelector('.effects__list');
 const originalElement = effectListElement.querySelector('#effect-none');
 
@@ -70,7 +69,7 @@ const formatScale = (value) => `${value * 100}%`;
 
 const changeScale = (value) => {
   scaleValue = value;
-  ImageElement.style.transform = `scale(${scaleValue})`;
+  imageElement.style.setProperty('transform', `scale(${scaleValue})`);
   scaleValueElement.value = formatScale(scaleValue);
 };
 
@@ -102,7 +101,7 @@ const createSlider = ({ MIN, MAX, START, STEP, STYLE, UNIT }) => {
   sliderElement.noUiSlider.on('update', () => {
     const value = sliderElement.noUiSlider.get();
     effectLevelElement.value = value;
-    ImageElement.style.filter = `${STYLE}(${value}${UNIT})`;
+    imageElement.style.setProperty('filter', `${STYLE}(${value}${UNIT})`);
   });
 };
 
@@ -111,7 +110,7 @@ const addEffect = () => {
     sliderElement.noUiSlider.destroy();
   }
   if (originalElement.checked) {
-    ImageElement.style.filter = 'none';
+    imageElement.style.setProperty('filter', 'none');
     sliderContainerElement.classList.add('hidden');
     return;
   }
@@ -122,11 +121,11 @@ const addEffect = () => {
 };
 
 const runImageEditor = () => {
-  ImageElement.style.filter = 'none';
+  imageElement.style.setProperty('filter', 'none');
   sliderContainerElement.classList.add('hidden');
   effectListElement.addEventListener('change', addEffect);
   scaleValue = SCALE.DEFAULT;
-  ImageElement.style.transform = `scale(${SCALE.DEFAULT})`;
+  imageElement.style.setProperty('transform', `scale(${SCALE.DEFAULT})`);
   scaleValueElement.value = formatScale(scaleValue);
   buttonDecrementElement.addEventListener('click', decrementScale);
   buttonIncrementElement.addEventListener('click', incrementScale);
