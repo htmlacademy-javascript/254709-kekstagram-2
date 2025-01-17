@@ -48,15 +48,8 @@ function onKeydownDocument(evt) {
 function closeImgEdit() {
   imgEditElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  imgUploadElement.value = '';
   stopValidator();
-  resetSettings();
-}
-
-function resetSettings() {
-  imgUploadElement.value = '';
-  newCommentElement.value = '';
-  newHashTagsElement.value = '';
+  formElement.reset();
 }
 
 // Обработчик событий на кнопку отправить
@@ -66,7 +59,7 @@ function setUserFormSubmit(evt) {
   sendData(new FormData(evt.target))
     .then(() => {
       closeImgEdit();
-      resetSettings();
+      formElement.reset();
       showSendSuccessAlert();
     }
     )
