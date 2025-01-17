@@ -8,7 +8,6 @@ const submitButtonElement = formElement.querySelector('.img-upload__submit');
 const imgUploadElement = formElement.querySelector('.img-upload__input');
 const imgEditElement = formElement.querySelector('.img-upload__overlay');
 const imgEditCloseButtonElement = formElement.querySelector('.img-upload__cancel');
-const body = document.body;
 const newCommentElement = formElement.querySelector('.text__description');
 const newHashTagsElement = formElement.querySelector('.text__hashtags');
 
@@ -17,7 +16,7 @@ const setupFormEventListeners = () => {
     runValidator();
     runImageEditor();
     imgEditElement.classList.remove('hidden');
-    body.classList.add('modal-open');
+    document.body.classList.add('modal-open');
     formElement.addEventListener('submit', setUserFormSubmit);
     imgEditCloseButtonElement.addEventListener('click', onClickCloseButton);
     imgEditElement.addEventListener('click', onOverlayClick);
@@ -48,7 +47,7 @@ function onKeydownDocument(evt) {
 // Закрытие редактирования изображения
 function closeImgEdit() {
   imgEditElement.classList.add('hidden');
-  body.classList.remove('modal-open');
+  document.body.classList.remove('modal-open');
   imgUploadElement.value = '';
   stopValidator();
   resetSettings();
@@ -60,18 +59,10 @@ function resetSettings() {
   newHashTagsElement.value = '';
 }
 
-function blockSubmitButton() {
-  submitButtonElement.disabled = true;
-}
-
-function unblockSubmitButton () {
-  submitButtonElement.disabled = false;
-}
-
 // Обработчик событий на кнопку отправить
 function setUserFormSubmit(evt) {
   evt.preventDefault();
-  blockSubmitButton();
+  submitButtonElement.setAttribute('disabled', '');
   sendData(new FormData(evt.target))
     .then(() => {
       closeImgEdit();
@@ -84,7 +75,11 @@ function setUserFormSubmit(evt) {
         showSendErrorAlert();
       }
     )
-    .finally(unblockSubmitButton);
+    .finally(
+      () => {
+        submitButtonElement.removeAttribute('disabled');
+      });
 }
+
 
 export { setupFormEventListeners };
