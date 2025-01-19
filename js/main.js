@@ -4,15 +4,17 @@ import { setupPictureEventListeners } from './photo-modal.js';
 import { setupFormEventListeners } from './form.js';
 import { showGetErrorAlert } from './util.js';
 
-getData()
-  .then((photoCollection) => {
+async function initializeGallery() {
+  try {
+    const photoCollection = await getData();
     renderGallery(photoCollection);
     setupPictureEventListeners(photoCollection);
     setupFilterListeners(photoCollection);
-  })
-  .then(() => document.querySelector('.img-filters').classList.remove('img-filters--inactive'))
-  .catch(() => {
+    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+  } catch (error) {
     showGetErrorAlert();
-  });
+  }
+}
 
+initializeGallery();
 setupFormEventListeners();

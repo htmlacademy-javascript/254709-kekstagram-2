@@ -1,4 +1,5 @@
 import { setupPictureEventListeners } from './photo-modal.js';
+import { debounce } from './util.js';
 
 const MAX_RANDOM_QTY = 10;
 
@@ -25,33 +26,39 @@ const renderGallery = (userPictures) => {
   picturesContainerElement.append(pictureFragment);
 };
 
-function setupFilterListeners (arr) {
-  const randomArr = arr.slice();
-  const discussedArr = arr.slice().sort((a, b) => b.comments.length - a.comments.length);
-  filterFormElement.addEventListener('click', (evt) => {
-    if (evt.target.id === 'filter-default') {
-      filterToggle(evt);
-      resetGallery();
-      renderGallery(arr);
-      setupPictureEventListeners(arr);
+const shuffleArray = (array) => {
+  const shuffled = array.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+const sortByComments = (array) =>
+  array.slice().sort((a, b) => b.comments.length - a.comments.length);
+
+function setupFilterListeners(arr) {
+  const filters = {
+    'filter-default': {
+      getFilteredArray: () => arr.slice()
+    },
+    'filter-random': {
+      getFilteredArray: () => shuffleArray(arr).slice(0, MAX_RANDOM_QTY)
+    },
+    'filter-discussed': {
+      getFilteredArray: () => sortByComments(arr)
     }
-    if (evt.target.id === 'filter-random') {
-      filterToggle(evt);
-      resetGallery();
-      for (let i = randomArr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [randomArr[i], randomArr[j]] = [randomArr[j], randomArr[i]];
-      }
-      renderGallery(randomArr.slice(0, MAX_RANDOM_QTY));
-      setupPictureEventListeners(randomArr.slice(0, MAX_RANDOM_QTY));
-    }
-    if (evt.target.id === 'filter-discussed') {
-      filterToggle(evt);
-      resetGallery();
-      renderGallery(discussedArr);
-      setupPictureEventListeners(discussedArr);
-    }
-  });
+  };
+
+  filterFormElement.addEventListener('click', debounce((evt) => {
+    const filter = filters[evt.target.id];
+    filterToggle(evt);
+    resetGallery();
+    const filteredArray = filter.getFilteredArray();
+    renderGallery(filteredArray);
+    setupPictureEventListeners(filteredArray);
+  }, 500));
 }
 
 function filterToggle(evt) {
