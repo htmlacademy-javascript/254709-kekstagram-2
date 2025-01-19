@@ -1,6 +1,7 @@
 import { getData } from './api.js';
 import { renderGallery, setupFilterListeners } from './thumbnails.js';
-import { setupPictureEventListeners } from './photo-modal.js';
+import { setupPictureEventListeners } from './image-modal.js';
+import { setupUploadEventListener } from './image-upload.js';
 import { setupFormEventListeners } from './form.js';
 import { showGetErrorAlert } from './util.js';
 
@@ -17,4 +18,5 @@ async function initializeGallery() {
 }
 
 initializeGallery();
+setupUploadEventListener();
 setupFormEventListeners();

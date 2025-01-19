@@ -1,4 +1,4 @@
-import { setupPictureEventListeners } from './photo-modal.js';
+import { setupPictureEventListeners } from './image-modal.js';
 import { debounce } from './util.js';
 
 const MAX_RANDOM_QTY = 10;
