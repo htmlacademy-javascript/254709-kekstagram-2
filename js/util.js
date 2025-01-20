@@ -14,16 +14,16 @@ const showGetErrorAlert = () => {
   }, ALERT_SHOW_TIME);
 };
 
-const showSendErrorAlert = () => {
-  const sendErrorTemplate = document.querySelector('#error');
-  const sendErrorElement = sendErrorTemplate.content.cloneNode(true);
-  document.body.append(sendErrorElement);
+const createNotification = ({ templateId, className, buttonClass }) => {
+  const template = document.querySelector(templateId);
+  const element = template.content.cloneNode(true);
+  document.body.append(element);
 
-  const errorElement = document.querySelector('.error');
-  const errorButton = errorElement.querySelector('.error__button');
+  const notification = document.querySelector(className);
+  const button = notification.querySelector(buttonClass);
 
-  const closeError = () => {
-    errorElement.remove();
+  const close = () => {
+    notification.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onOverlayClick);
   };
@@ -31,52 +31,41 @@ const showSendErrorAlert = () => {
   function onDocumentKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      closeError();
+      close();
+      evt.stopPropagation();
     }
   }
 
   function onOverlayClick(evt) {
-    if (evt.target === errorElement) {
+    if (evt.target === notification) {
       evt.stopPropagation();
-      closeError();
+      close();
     }
   }
-  errorButton.addEventListener('click', closeError);
+
+  button.addEventListener('click', close);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onOverlayClick);
 };
 
-const showSendSuccessAlert = () => {
-  const sendSuccessTemplate = document.querySelector('#success');
-  const sendSuccessElement = sendSuccessTemplate.content.cloneNode(true);
-  document.body.append(sendSuccessElement);
+const showSendErrorAlert = () => createNotification({
+  templateId: '#error',
+  className: '.error',
+  buttonClass: '.error__button'
+});
 
-  const successElement = document.querySelector('.success');
-  const successButton = successElement.querySelector('.success__button');
+const showSendSuccessAlert = () => createNotification({
+  templateId: '#success',
+  className: '.success',
+  buttonClass: '.success__button'
+});
 
-  const closeSuccess = () => {
-    successElement.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onOverlayClick);
+function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
+}
 
-  function onDocumentKeydown(evt) {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      closeSuccess();
-    }
-  }
-
-  function onOverlayClick(evt) {
-    if (evt.target === successElement) {
-      evt.stopPropagation();
-      closeSuccess();
-    }
-  }
-  successButton.addEventListener('click', closeSuccess);
-  document.addEventListener('keydown', onDocumentKeydown);
-  document.addEventListener('click', onOverlayClick);
-};
-
-
-export { isEscapeKey, showGetErrorAlert, showSendErrorAlert, showSendSuccessAlert };
+export { isEscapeKey, showGetErrorAlert, showSendErrorAlert, showSendSuccessAlert, debounce };

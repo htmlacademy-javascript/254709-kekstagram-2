@@ -13,6 +13,7 @@ const newHashTagsElement = formElement.querySelector('.text__hashtags');
 
 const setupFormEventListeners = () => {
   imgUploadElement.addEventListener('change', () => {
+    stopValidator();
     runValidator();
     runImageEditor();
     imgEditElement.classList.remove('hidden');
@@ -24,50 +25,38 @@ const setupFormEventListeners = () => {
   });
 };
 
-// Вызов закрытия редактирования нажатием на закрывающий элемент
 function onClickCloseButton() {
   closeImgEdit();
 }
 
-// Вызов закрытия редактирования нажатием на оверлей
 function onOverlayClick(evt) {
   if (evt.target === imgEditElement) {
     closeImgEdit();
   }
 }
 
-// Вызов закрытия редактирования нажатием на escape
 function onKeydownDocument(evt) {
-  if (isEscapeKey(evt) && document.activeElement !== newCommentElement && document.activeElement !== newHashTagsElement) {
+  if (isEscapeKey(evt) && document.activeElement !== newCommentElement && document.activeElement !== newHashTagsElement && !document.querySelector('.error')) {
     evt.preventDefault();
     closeImgEdit();
   }
 }
 
-// Закрытие редактирования изображения
 function closeImgEdit() {
   imgEditElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  imgUploadElement.value = '';
   stopValidator();
-  resetSettings();
+  formElement.reset();
 }
 
-function resetSettings() {
-  imgUploadElement.value = '';
-  newCommentElement.value = '';
-  newHashTagsElement.value = '';
-}
-
-// Обработчик событий на кнопку отправить
 function setUserFormSubmit(evt) {
   evt.preventDefault();
   submitButtonElement.setAttribute('disabled', '');
   sendData(new FormData(evt.target))
     .then(() => {
-      closeImgEdit();
-      resetSettings();
+      formElement.reset();
       showSendSuccessAlert();
+      closeImgEdit();
     }
     )
     .catch(
@@ -80,6 +69,5 @@ function setUserFormSubmit(evt) {
         submitButtonElement.removeAttribute('disabled');
       });
 }
-
 
 export { setupFormEventListeners };

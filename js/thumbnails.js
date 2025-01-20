@@ -1,6 +1,8 @@
-import { setupPictureEventListeners } from './photo-modal.js';
+import { setupPictureEventListeners } from './image-modal.js';
+import { debounce } from './util.js';
 
 const MAX_RANDOM_QTY = 10;
+const TIMEOUT = 500;
 
 const filterFormElement = document.querySelector('.img-filters__form');
 const defaultButtonElement = filterFormElement.querySelector('#filter-default');
@@ -15,7 +17,7 @@ const renderGallery = (userPictures) => {
 
   userPictures.forEach(({id, url, description, likes, comments}) => {
     const pictureElement = pictureTemplateElement.cloneNode(true);
-    pictureElement.dataset.pictureId = id; // Устанавливает атрибут data-set-id
+    pictureElement.dataset.pictureId = id;
     pictureElement.querySelector('.picture__img').src = url;
     pictureElement.querySelector('.picture__img').alt = description;
     pictureElement.querySelector('.picture__likes').textContent = likes;
@@ -25,32 +27,35 @@ const renderGallery = (userPictures) => {
   picturesContainerElement.append(pictureFragment);
 };
 
-function setupFilterListeners (arr) {
-  const randomArr = arr.slice();
-  const discussedArr = arr.slice().sort((a, b) => b.comments.length - a.comments.length);
+const shuffleArray = (array) => {
+  const shuffled = array.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+const sortByComments = (array) =>
+  array.slice().sort((a, b) => b.comments.length - a.comments.length);
+
+function setupFilterListeners(arr) {
+  const filters = {
+    'filter-default': () => arr.slice(),
+    'filter-random': () => shuffleArray(arr).slice(0, MAX_RANDOM_QTY),
+    'filter-discussed': () => sortByComments(arr)
+  };
+
+  const updateGallery = debounce((filteredArray) => {
+    resetGallery();
+    renderGallery(filteredArray);
+    setupPictureEventListeners(filteredArray);
+  }, TIMEOUT);
+
   filterFormElement.addEventListener('click', (evt) => {
-    if (evt.target.id === 'filter-default') {
-      filterToggle(evt);
-      resetGallery();
-      renderGallery(arr);
-      setupPictureEventListeners(arr);
-    }
-    if (evt.target.id === 'filter-random') {
-      filterToggle(evt);
-      resetGallery();
-      for (let i = randomArr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [randomArr[i], randomArr[j]] = [randomArr[j], randomArr[i]];
-      }
-      renderGallery(randomArr.slice(0, MAX_RANDOM_QTY));
-      setupPictureEventListeners(randomArr.slice(0, MAX_RANDOM_QTY));
-    }
-    if (evt.target.id === 'filter-discussed') {
-      filterToggle(evt);
-      resetGallery();
-      renderGallery(discussedArr);
-      setupPictureEventListeners(discussedArr);
-    }
+    filterToggle(evt);
+    const filteredArray = filters[evt.target.id]();
+    updateGallery(filteredArray);
   });
 }
 

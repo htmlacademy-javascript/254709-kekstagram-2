@@ -1,38 +1,34 @@
 import { createCommentTemplateElement } from './comment-creator.js';
-const COMMENTS_LOAD_STEP = 5; // Количество комментариев, которые показываются за один раз
+const COMMENTS_LOAD_STEP = 5;
 
 const bigPictureSocialElement = document.querySelector('.big-picture__social');
-
 const socialCommentCountElement = bigPictureSocialElement.querySelector('.social__comment-shown-count');
 const socialCommentTotalCountElement = bigPictureSocialElement.querySelector('.social__comment-total-count');
 const commentsContainerElement = bigPictureSocialElement.querySelector('.social__comments');
 const commentsLoaderElement = bigPictureSocialElement.querySelector('.comments-loader');
 
-
-// Переменные для хранения текущих комментариев
 let currentComments = [];
 let displayedCommentsCount = 0;
 
-// Функция рендера комментариев порциями
 const renderComments = () => {
-  const remainingComments = currentComments.slice(displayedCommentsCount, displayedCommentsCount + COMMENTS_LOAD_STEP); // Выделяем из массива комментариев группу из COMMENTS_LOAD_STEP комментов для подгрузки
-  const commentsFragment = document.createDocumentFragment(); // Создаем фрагмент для подгрузки
-  remainingComments.forEach((comment) => { // Добавляем новую порцию комментариев
-    commentsFragment.append(createCommentTemplateElement(comment)); // Прогоняем каждый элемент через функцию создания комментария и добавляем во фрагмент
+  const remainingComments = currentComments.slice(displayedCommentsCount, displayedCommentsCount + COMMENTS_LOAD_STEP);
+  const commentsFragment = document.createDocumentFragment();
+  remainingComments.forEach((comment) => {
+    commentsFragment.append(createCommentTemplateElement(comment));
   });
-  commentsContainerElement.append(commentsFragment); // Добавляем фрагмент в конец контейнера
-  displayedCommentsCount += remainingComments.length; // Обновляем счетчик показанных комментариев
+  commentsContainerElement.append(commentsFragment);
+  displayedCommentsCount += remainingComments.length;
   commentsLoaderElement.classList.toggle('hidden', displayedCommentsCount >= currentComments.length);
   socialCommentCountElement.textContent = displayedCommentsCount;
   socialCommentTotalCountElement.textContent = currentComments.length;
 };
 
-// Функция инициализации загрузки комментариев
+
 const initComments = (comments) => {
-  currentComments = comments; // Сохраняем все комментарии
-  displayedCommentsCount = 0; // Сбрасываем счетчик показанных комментариев
-  commentsContainerElement.innerHTML = ''; // Очищаем контейнер комментариев
-  renderComments(); // Первичная загрузка комментариев
+  currentComments = comments;
+  displayedCommentsCount = 0;
+  commentsContainerElement.innerHTML = '';
+  renderComments();
   commentsLoaderElement.addEventListener('click', renderComments);
 };
 
