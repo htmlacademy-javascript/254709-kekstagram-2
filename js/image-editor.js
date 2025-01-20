@@ -7,7 +7,7 @@ const scaleValueElement = document.querySelector('.scale__control--value');
 const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 const sliderElement = sliderContainerElement.querySelector('.effect-level__slider');
 const effectLevelElement = sliderContainerElement.querySelector('.effect-level__value');
-const imageElement = document.querySelector('.img-upload__preview');
+const imageElement = document.querySelector('.img-upload__preview img');
 const effectListElement = document.querySelector('.effects__list');
 const originalElement = effectListElement.querySelector('#effect-none');
 
@@ -61,15 +61,13 @@ const EFFECTS = {
   },
 };
 
-
-// Создаем редактирование масштаба
 let scaleValue = SCALE.DEFAULT;
 
 const formatScale = (value) => `${value * 100}%`;
 
 const changeScale = (value) => {
   scaleValue = value;
-  imageElement.style.setProperty('transform', `scale(${scaleValue})`);
+  imageElement.setAttribute('style', `transform: scale(${scaleValue})`);
   scaleValueElement.value = formatScale(scaleValue);
 };
 
@@ -85,7 +83,8 @@ const incrementScale = () => {
   }
 };
 
-// Создаем слайдер
+const getCurrentScale = () => `scale(${scaleValue})`;
+
 const createSlider = ({ MIN, MAX, START, STEP, STYLE, UNIT }) => {
   noUiSlider.create(sliderElement, {
     range: { min: MIN, max: MAX },
@@ -93,7 +92,10 @@ const createSlider = ({ MIN, MAX, START, STEP, STYLE, UNIT }) => {
     step: STEP,
     connect: 'lower',
     format: {
-      to: (value) => value.toFixed(1),
+      to: (value) => {
+        const formatted = Number(value).toFixed(1);
+        return formatted.endsWith('.0') ? formatted.slice(0, -2) : formatted;
+      },
       from: (value) => parseFloat(value)
     }
   });
@@ -101,7 +103,7 @@ const createSlider = ({ MIN, MAX, START, STEP, STYLE, UNIT }) => {
   sliderElement.noUiSlider.on('update', () => {
     const value = sliderElement.noUiSlider.get();
     effectLevelElement.value = value;
-    imageElement.style.setProperty('filter', `${STYLE}(${value}${UNIT})`);
+    imageElement.setAttribute('style', `transform: ${getCurrentScale()}; filter: ${STYLE}(${value}${UNIT})`);
   });
 };
 
@@ -110,7 +112,7 @@ const addEffect = () => {
     sliderElement.noUiSlider.destroy();
   }
   if (originalElement.checked) {
-    imageElement.style.setProperty('filter', 'none');
+    imageElement.setAttribute('style', `transform: ${getCurrentScale()}; filter: none`);
     sliderContainerElement.classList.add('hidden');
     return;
   }
@@ -121,11 +123,11 @@ const addEffect = () => {
 };
 
 const runImageEditor = () => {
-  imageElement.style.setProperty('filter', 'none');
+  imageElement.setAttribute('style', `transform: ${getCurrentScale()}; filter: none`);
   sliderContainerElement.classList.add('hidden');
   effectListElement.addEventListener('change', addEffect);
   scaleValue = SCALE.DEFAULT;
-  imageElement.style.setProperty('transform', `scale(${SCALE.DEFAULT})`);
+  imageElement.setAttribute('style', `transform: scale(${SCALE.DEFAULT})`);
   scaleValueElement.value = formatScale(scaleValue);
   buttonDecrementElement.addEventListener('click', decrementScale);
   buttonIncrementElement.addEventListener('click', incrementScale);

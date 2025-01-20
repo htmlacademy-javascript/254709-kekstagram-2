@@ -4,6 +4,9 @@ import { setupPictureEventListeners } from './image-modal.js';
 import { setupUploadEventListener } from './image-upload.js';
 import { setupFormEventListeners } from './form.js';
 import { showGetErrorAlert } from './util.js';
+import { debounce } from './util.js';
+
+const TIMEOUT = 500;
 
 async function initializeGallery() {
   try {
@@ -16,7 +19,7 @@ async function initializeGallery() {
     showGetErrorAlert();
   }
 }
-
-initializeGallery();
+const runProject = debounce(initializeGallery, TIMEOUT);
+runProject();
 setupUploadEventListener();
 setupFormEventListeners();

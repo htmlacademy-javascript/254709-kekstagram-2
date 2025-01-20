@@ -2,6 +2,7 @@ import { setupPictureEventListeners } from './image-modal.js';
 import { debounce } from './util.js';
 
 const MAX_RANDOM_QTY = 10;
+const TIMEOUT = 500;
 
 const filterFormElement = document.querySelector('.img-filters__form');
 const defaultButtonElement = filterFormElement.querySelector('#filter-default');
@@ -16,7 +17,7 @@ const renderGallery = (userPictures) => {
 
   userPictures.forEach(({id, url, description, likes, comments}) => {
     const pictureElement = pictureTemplateElement.cloneNode(true);
-    pictureElement.dataset.pictureId = id; // Устанавливает атрибут data-set-id
+    pictureElement.dataset.pictureId = id;
     pictureElement.querySelector('.picture__img').src = url;
     pictureElement.querySelector('.picture__img').alt = description;
     pictureElement.querySelector('.picture__likes').textContent = likes;
@@ -51,14 +52,18 @@ function setupFilterListeners(arr) {
     }
   };
 
-  filterFormElement.addEventListener('click', debounce((evt) => {
-    const filter = filters[evt.target.id];
-    filterToggle(evt);
+  const updateGallery = debounce((filteredArray) => {
     resetGallery();
-    const filteredArray = filter.getFilteredArray();
     renderGallery(filteredArray);
     setupPictureEventListeners(filteredArray);
-  }, 500));
+  }, TIMEOUT);
+
+  filterFormElement.addEventListener('click', (evt) => {
+    filterToggle(evt);
+    const filter = filters[evt.target.id];
+    const filteredArray = filter.getFilteredArray();
+    updateGallery(filteredArray);
+  });
 }
 
 function filterToggle(evt) {
