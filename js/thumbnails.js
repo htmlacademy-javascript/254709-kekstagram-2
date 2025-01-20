@@ -17,7 +17,7 @@ const renderGallery = (userPictures) => {
 
   userPictures.forEach(({id, url, description, likes, comments}) => {
     const pictureElement = pictureTemplateElement.cloneNode(true);
-    pictureElement.dataset.pictureId = id;
+    pictureElement.setAttribute('data-picture-id', id);
     pictureElement.querySelector('.picture__img').src = url;
     pictureElement.querySelector('.picture__img').alt = description;
     pictureElement.querySelector('.picture__likes').textContent = likes;
