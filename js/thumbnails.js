@@ -54,7 +54,7 @@ function setupFilterListeners(arr) {
 
   filterFormElement.addEventListener('click', (evt) => {
     filterToggle(evt);
-    const filteredArray = filters[evt.target.id];
+    const filteredArray = filters[evt.target.id]();
     updateGallery(filteredArray);
   });
 }
