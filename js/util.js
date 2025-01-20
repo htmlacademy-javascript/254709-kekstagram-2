@@ -42,7 +42,6 @@ const createNotification = ({ templateId, className, buttonClass }) => {
       close();
     }
   }
-
   button.addEventListener('click', close);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onOverlayClick);
@@ -60,12 +59,12 @@ const showSendSuccessAlert = () => createNotification({
   buttonClass: '.success__button'
 });
 
-function debounce (callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
 export { isEscapeKey, showGetErrorAlert, showSendErrorAlert, showSendSuccessAlert, debounce };
