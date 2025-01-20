@@ -41,15 +41,9 @@ const sortByComments = (array) =>
 
 function setupFilterListeners(arr) {
   const filters = {
-    'filter-default': {
-      getFilteredArray: () => arr.slice()
-    },
-    'filter-random': {
-      getFilteredArray: () => shuffleArray(arr).slice(0, MAX_RANDOM_QTY)
-    },
-    'filter-discussed': {
-      getFilteredArray: () => sortByComments(arr)
-    }
+    'filter-default': () => arr.slice(),
+    'filter-random': () => shuffleArray(arr).slice(0, MAX_RANDOM_QTY),
+    'filter-discussed': () => sortByComments(arr)
   };
 
   const updateGallery = debounce((filteredArray) => {
@@ -60,8 +54,7 @@ function setupFilterListeners(arr) {
 
   filterFormElement.addEventListener('click', (evt) => {
     filterToggle(evt);
-    const filter = filters[evt.target.id];
-    const filteredArray = filter.getFilteredArray();
+    const filteredArray = filters[evt.target.id];
     updateGallery(filteredArray);
   });
 }
