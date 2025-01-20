@@ -25,6 +25,13 @@ const setupFormEventListeners = () => {
   });
 };
 
+const closeImgEdit = () => {
+  imgEditElement.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  stopValidator();
+  formElement.reset();
+};
+
 function onClickCloseButton() {
   closeImgEdit();
 }
@@ -40,13 +47,6 @@ function onKeydownDocument(evt) {
     evt.preventDefault();
     closeImgEdit();
   }
-}
-
-function closeImgEdit() {
-  imgEditElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  stopValidator();
-  formElement.reset();
 }
 
 function setUserFormSubmit(evt) {

@@ -39,7 +39,18 @@ const shuffleArray = (array) => {
 const sortByComments = (array) =>
   array.slice().sort((a, b) => b.comments.length - a.comments.length);
 
-function setupFilterListeners(arr) {
+const filterToggle = (evt) => {
+  const filterButtons = [defaultButtonElement, randomButtonElement, discussedButtonElement];
+  filterButtons.forEach((button) => {
+    button.classList.toggle('img-filters__button--active', button === evt.target);
+  });
+};
+
+const resetGallery = () => {
+  document.querySelectorAll('.picture').forEach((element) => element.remove());
+};
+
+const setupFilterListeners = (arr) => {
   const filters = {
     'filter-default': () => arr.slice(),
     'filter-random': () => shuffleArray(arr).slice(0, MAX_RANDOM_QTY),
@@ -57,17 +68,6 @@ function setupFilterListeners(arr) {
     const filteredArray = filters[evt.target.id]();
     updateGallery(filteredArray);
   });
-}
-
-function filterToggle(evt) {
-  const filterButtons = [defaultButtonElement, randomButtonElement, discussedButtonElement];
-  filterButtons.forEach((button) => {
-    button.classList.toggle('img-filters__button--active', button === evt.target);
-  });
-}
-
-function resetGallery () {
-  document.querySelectorAll('.picture').forEach((element) => element.remove());
-}
+};
 
 export { renderGallery, setupFilterListeners };

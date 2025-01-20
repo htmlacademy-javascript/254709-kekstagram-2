@@ -8,7 +8,7 @@ import { debounce } from './util.js';
 
 const TIMEOUT = 500;
 
-async function initializeGallery() {
+const initializeGallery = async () => {
   try {
     const photoCollection = await getData();
     renderGallery(photoCollection);
@@ -18,7 +18,8 @@ async function initializeGallery() {
   } catch (error) {
     showGetErrorAlert();
   }
-}
+};
+
 const runProject = debounce(initializeGallery, TIMEOUT);
 runProject();
 setupUploadEventListener();
